@@ -1,5 +1,6 @@
 import sys
 
+
 '''
 orients :
     0- North
@@ -7,6 +8,7 @@ orients :
     2- South
     3- West
 '''
+
 
 def orientation(orient,turning):
     if (turning== 'L'):
@@ -41,10 +43,6 @@ def updateCoordinates(x,y,orient):
         x-=1
 
     return(x,y)
-
-
-
-
 
 class MouseCrashedError(Exception):
     pass
@@ -124,12 +122,6 @@ def turnRight90():
 
 def turnLeft90():
     turnLeft()
-
-def turnRight45():
-    command(args=["turnRight45"], return_type=str)
-
-def turnLeft45():
-    command(args=["turnLeft45"], return_type=str)
 
 def setWall(x, y, direction):
     command(args=["setWall", x, y, direction])

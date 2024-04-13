@@ -1,10 +1,5 @@
-import Senior_Thesis.API as API
-import sys
-
-def log(string):
-    sys.stderr.write("{}\n".format(string))
-    sys.stderr.flush()
-
+import API
+import Mouse_Tools
 
 # Define directions
 NORTH, EAST, SOUTH, WEST = range(4)
@@ -114,40 +109,6 @@ def is_move_possible_left():
     else:
         return True
 
-def showSuroundingWalls(x,y,orient,L,R,F):
-    if(orient==0):
-        if(L):
-            API.setWall(x,y,'w')
-        if(F):
-            API.setWall(x,y,'n')
-        if(R):
-            API.setWall(x,y,'e')
-    if(orient==1):
-        if(L):
-            API.setWall(x,y,'n')
-        if(F):
-            API.setWall(x,y,'e')
-        if(R):
-            API.setWall(x,y,'s')
-
-    if(orient==2):
-        if(L):
-            API.setWall(x,y,'e')
-        if(F):
-            API.setWall(x,y,'s')
-        if(R):
-            API.setWall(x,y,'w')
-    if(orient==3):
-        if(L):
-            API.setWall(x,y,'s')
-        if(F):
-            API.setWall(x,y,'w')
-        if(R):
-            API.setWall(x,y,'n')
-
-
-
-
 def backtrack():
     global mouse_x, mouse_y
     if path_stack:
@@ -165,9 +126,9 @@ def backtrack():
             elif dx == -1:
                 turn_to(WEST)
             elif dy == 1:
-                turn_to(NORTH)  # Notice this was previously NORTH
+                turn_to(NORTH)  
             elif dy == -1:
-                turn_to(SOUTH)  # Notice this was previously SOUTH
+                turn_to(SOUTH) 
             # Move to the last position
             try:
                 API.moveForward()
@@ -178,16 +139,14 @@ def backtrack():
                 API.setText(mouse_x, mouse_y, 'Critical Crash')
                 raise
 
-
 def traversePath(path):
     global mouse_x, mouse_y, path_stack
     while path:
         # Pop the current position, since we're backtracking from here
         path.pop()
         if path:
-            # Peek at the next position to backtrack to
+            
             last_x, last_y = path[-1]
-            # Compute the direction to the last position
             dx = last_x - mouse_x
             dy = last_y - mouse_y
             # Rotate the mouse to face the last position
@@ -196,9 +155,9 @@ def traversePath(path):
             elif dx == -1:
                 turn_to(WEST)
             elif dy == 1:
-                turn_to(NORTH)  # Notice this was previously NORTH
+                turn_to(NORTH)  
             elif dy == -1:
-                turn_to(SOUTH)  # Notice this was previously SOUTH
+                turn_to(SOUTH)  
             # Move to the last position
             try:
                 API.moveForward()
@@ -209,14 +168,8 @@ def traversePath(path):
                 API.setText(mouse_x, mouse_y, 'Critical Crash')
                 raise
 
-
-
-
 def turn_to(direction):
     while mouse_dir != direction:
-        #log(mouse_dir)
-        #log(direction)
-        #log(abs(mouse_dir - direction))
         if(mouse_dir == NORTH and direction==EAST):
             turn_right()
         elif(mouse_dir == NORTH and direction==WEST):
@@ -235,9 +188,7 @@ def turn_to(direction):
             turn_right()
         elif( (  abs((mouse_dir - direction))) == 2 ): #this handles 180's
             turn_right()
-            turn_right()
-
-        
+            turn_right()        
 
 def dfs_explore(x, y):
     global done
@@ -250,14 +201,14 @@ def dfs_explore(x, y):
         return
     visited.add((x, y))
     API.setColor(x, y, 'G')  # Green for visited
-    # for d in range(4):
-    showSuroundingWalls(x,y,mouse_dir,L,R,F)
+    
+    Mouse_Tools.showSuroundingWalls(x,y,mouse_dir,L,R,F)
     if mouse_dir == NORTH:
         if is_move_possible():
-            if move_forward():
-                dfs_explore(mouse_x, mouse_y)
-                if done:
-                    return 
+            move_forward()
+            dfs_explore(mouse_x, mouse_y)
+            if done:
+                return 
         elif is_move_possible_right():
             turn_right()
             if move_forward():
@@ -266,20 +217,11 @@ def dfs_explore(x, y):
                     return
         elif is_move_possible_left():
             turn_left()
-            if move_forward():
-                dfs_explore(mouse_x, mouse_y)
-                if done:
-                    return
-        
-        # elif is_move_possible_back():
-        #     turn_right()
-        #     turn_right()
-        #     if move_forward():
-        #         dfs_explore(mouse_x, mouse_y)
-        #         if done:
-        #             return        
-
-
+            move_forward()
+            dfs_explore(mouse_x, mouse_y)
+            if done:
+                return   
+                
     if mouse_dir == EAST:
 
         if is_move_possible_left():
@@ -301,22 +243,7 @@ def dfs_explore(x, y):
                 dfs_explore(mouse_x, mouse_y)
                 if done:
                     return
-        # elif is_move_possible_left():
-        #     turn_left()
-        #     if move_forward():
-        #         dfs_explore(mouse_x, mouse_y)
-        #         if done:
-        #             return
-        
-        # elif is_move_possible_back():
-        #     turn_right()
-        #     turn_right()
-        #     if move_forward():
-        #         dfs_explore(mouse_x, mouse_y)
-        #         if done:
-        #             return        
-
-
+       
     if mouse_dir == SOUTH:
 
         if is_move_possible_left():
@@ -327,10 +254,10 @@ def dfs_explore(x, y):
                     return
 
         elif is_move_possible():
-            if move_forward():
-                dfs_explore(mouse_x, mouse_y)
-                if done:
-                    return 
+            move_forward()
+            dfs_explore(mouse_x, mouse_y)
+            if done:
+                return 
         elif is_move_possible_right():
             turn_right()
             if move_forward():
@@ -338,8 +265,6 @@ def dfs_explore(x, y):
                 if done:
                     return
         
-
-
     if mouse_dir == WEST:
 
         if is_move_possible_right():
@@ -357,19 +282,15 @@ def dfs_explore(x, y):
                     return
 
         elif is_move_possible():
-            if move_forward():
-                dfs_explore(mouse_x, mouse_y)
-                if done:
-                    return 
+            move_forward()
+            dfs_explore(mouse_x, mouse_y)
+            if done:
+                return 
 
 
                 # Backtrack to the previous position after exploring
     backtrack()
     dfs_explore(mouse_x, mouse_y)
-
-    
-    # Mark backtracking path with a different color (optional)
-    #API.setColor(x, y, 'g')
 
 def main():
     global visited, path_stack
@@ -386,10 +307,5 @@ def main():
     path_stack.reverse()
     traversePath(path_stack)
 
-
-
-
-    # Finalization code here
-    #API.setColor(mouse_x, mouse_y, 'b')  #dark green
 if __name__ == "__main__":
     main()

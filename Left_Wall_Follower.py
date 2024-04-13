@@ -1,15 +1,13 @@
-import Senior_Thesis.API as API
+import API as API
 import sys
 
-def log(string):
-    sys.stderr.write("{}\n".format(string))
-    sys.stderr.flush()
+
 
 def main():
     orient=0
     x,y = 0,0
     API.setColor(0, 0, "G")
-    #API.setText(0, 0, "abc")
+
     while True:
         if not API.wallLeft():
             API.turnLeft()

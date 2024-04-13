@@ -1,44 +1,16 @@
 import API
-import sys
+import Mouse_Tools
 
 x=0
 y=0
 orient=0
 cell = 0
 
-cells =    [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  ]
 
-tracker = [ [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  ]
+
+cells = [[0 for _ in range(16)] for _ in range(16)]
+
+tracker = [[0 for _ in range(16)] for _ in range(16)]
 
 flood=[ [14,13,12,11,10,9,8,7,7,8,9,10,11,12,13,14],
         [13,12,11,10,9,8,7,6,6,7,8,9,10,11,12,13],
@@ -75,7 +47,9 @@ flood2= [   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  ]
 
 queue=[]
-#done
+
+
+#Tracks Orientation while turning
 def orientation(orient,turning):
     if (turning== 'L'):
         orient-=1
@@ -97,7 +71,7 @@ def orientation(orient,turning):
 
     return(orient)
 
-#done
+#changes coordininates based on current coordinates and orientation
 def updateCoordinates(x,y,orient):
 
     if (orient==0):
@@ -111,42 +85,8 @@ def updateCoordinates(x,y,orient):
 
     return(x,y)
 
-def log(string):
-    sys.stderr.write("{}\n".format(string))
-
-def showSuroundingWalls(x,y,orient,L,R,F):
-    if(orient==0):
-        if(L):
-            API.setWall(x,y,'w')
-        if(F):
-            API.setWall(x,y,'n')
-        if(R):
-            API.setWall(x,y,'e')
-    if(orient==1):
-        if(L):
-            API.setWall(x,y,'n')
-        if(F):
-            API.setWall(x,y,'e')
-        if(R):
-            API.setWall(x,y,'s')
-
-    if(orient==2):
-        if(L):
-            API.setWall(x,y,'e')
-        if(F):
-            API.setWall(x,y,'s')
-        if(R):
-            API.setWall(x,y,'w')
-    if(orient==3):
-        if(L):
-            API.setWall(x,y,'s')
-        if(F):
-            API.setWall(x,y,'w')
-        if(R):
-            API.setWall(x,y,'n')
-
-def updateWalls(x,y,orient,L,R,F):
-    showSuroundingWalls(x,y,orient,L,R,F)
+def updateWalls(x,y,orient,L,R,F): #decides which kind of box the mouse is currently in and updates walls accordingly
+    Mouse_Tools.showSuroundingWalls(x,y,orient,L,R,F)
     if(L and R and F):
         if (orient==0): 
             cells[y][x]= 13
@@ -216,12 +156,8 @@ def updateWalls(x,y,orient,L,R,F):
     else:
         cells[y][x]= 15
 
-#done
-def isAccessible(x,y,x1,y1):
-    '''returns True if mouse can move to x1,y1 from x,y (two adjescent cells)
-    '''
-    #if (cells[y][x]==15):
-    #    return (True)
+
+def isAccessible(x,y,x1,y1): #returns True if mouse can move to x1,y1 from x,y (two adjescent cells)
 
     if (x==x1):
         if(y>y1):
@@ -248,10 +184,9 @@ def isAccessible(x,y,x1,y1):
             else:
                 return (True)
 
-#done
-def getSurrounds(x,y):
-    ''' returns x1,y1,x2,y2,x3,y3,x4,y4 the four surrounding square
-    '''
+
+def getSurrounds(x,y): #returns the 4 adjacent squares
+    
     x3= x-1
     y3=y
     x0=x
@@ -266,7 +201,7 @@ def getSurrounds(x,y):
         y0=-1
     return (x0,y0,x1,y1,x2,y2,x3,y3)  #order of cells- north,east,south,west
 
-#done
+
 def changeDestination(maze,destinationx, destinationy):
     for j in range(16):
         for i in range(16):
@@ -305,7 +240,7 @@ def changeDestination(maze,destinationx, destinationy):
                 queue.append(y3)
                 queue.append(x3)
 
-#done
+
 def floodFill2(maze):
     for i in range(16):
         for j in range(16):
@@ -357,7 +292,7 @@ def floodFill2(maze):
                     queue.append(y3)
                     queue.append(x3)
 
-#done
+
 def floodFill3(maze,queue):
 
     while (len(queue)!=0):
@@ -390,67 +325,9 @@ def floodFill3(maze,queue):
                     queue.append(y3)
                     queue.append(x3)
 
-#done                       
-def toMove(maze,x,y,xprev,yprev,orient):
-    '''returns the direction to turn into L,F,R or B
-    '''
-    x0,y0,x1,y1,x2,y2,x3,y3 = getSurrounds(x,y)
-    val= maze[y][x]
-    prev=0
-    minVals=[1000,1000,1000,1000]
 
-    if (isAccessible(x,y,x0,y0)):
-        if (x0==xprev and y0==yprev):
-            prev=0
-        minVals[0]= maze[y0][x0]
-
-    if (isAccessible(x,y,x1,y1)):
-        if (x1==xprev and y1==yprev):
-            prev=1
-        minVals[1]= maze[y1][x1]
-
-    if (isAccessible(x,y,x2,y2)):
-        if (x2==xprev and y2==yprev):
-            prev=2
-        minVals[2]= maze[y2][x2]
-
-    if (isAccessible(x,y,x3,y3)):
-        if (x3==xprev and y3==yprev):
-            prev=3
-        minVals[3]= maze[y3][x3]
-
-    minVal=minVals[0]
-    minCell=0
-    noMovements=0
-    for i in minVals:
-        if (i!=1000):
-            noMovements+=1
-
-    for i in range(4):
-        if (minVals[i]<minVal):
-            if (noMovements==1):
-                minVal= minVals[i]
-                minCell= i
-            else:
-                if(i==prev):
-                    pass
-                else:
-                    minVal= minVals[i]
-                    minCell= i
-
-    if (minCell==orient):
-        return ('F')
-    elif((minCell==orient-1) or (minCell== orient+3)):
-        return('L')
-    elif ((minCell==orient+1) or (minCell== orient-3)):
-        return('R')
-    else:
-        return('B')
-
-#done
-def toMove2(maze,x,y,xprev,yprev,orient):
-    '''returns the direction to turn into L,F,R or B
-    '''
+def toMove(maze,x,y,xprev,yprev,orient):#returns new direction
+ 
     x0,y0,x1,y1,x2,y2,x3,y3 = getSurrounds(x,y)
     val= maze[y][x]
     minCell=0
@@ -480,7 +357,7 @@ def toMove2(maze,x,y,xprev,yprev,orient):
     else:
         return('B')
 
-def show(flood,variable):
+def show(flood,variable): #updates distance values for all squares
     for x in range(16):
         for y in range(16):
             x0,y0,x1,y1,x2,y2,x3,y3= getSurrounds(x,y)
@@ -504,120 +381,7 @@ def show(flood,variable):
             #API.setText(x,y,str(variable))
 
 
-def center(x,y,orient):
-    L= API.wallLeft()
-    R= API.wallRight()
-    F= API.wallFront()
-    
-    if (L):
-        updateWalls(x,y,orient,L,R,F)
 
-        API.moveForward()
-        xprev=x
-        yprev=y
-        x,y = updateCoordinates(x,y,orient)
-
-        L= API.wallLeft()
-        R= API.wallRight()
-        F= API.wallFront()
-        updateWalls(x,y,orient,L,R,F)
-
-        API.turnRight()
-        orient = orientation(orient,'R')
-
-        API.moveForward()
-        xprev=x
-        yprev=y
-        x,y = updateCoordinates(x,y,orient)
-        
-        L= API.wallLeft()
-        R= API.wallRight()
-        F= API.wallFront()
-        updateWalls(x,y,orient,L,R,F)
-
-        API.turnRight()
-        orient = orientation(orient,'R')
-
-        API.moveForward()
-        xprev=x
-        yprev=y
-        x,y = updateCoordinates(x,y,orient)
-
-        L= API.wallLeft()
-        R= API.wallRight()
-        F= API.wallFront()
-        updateWalls(x,y,orient,L,R,F)
-
-        API.turnRight()
-        orient = orientation(orient,'R')
-
-        API.moveForward()
-        xprev=x
-        yprev=y
-        x,y = updateCoordinates(x,y,orient)
-
-        L= API.wallLeft()
-        R= API.wallRight()
-        F= API.wallFront()
-        updateWalls(x,y,orient,L,R,F)
-        
-        return (x,y,xprev,yprev,orient)
-
-    else:
-        updateWalls(x,y,orient,L,R,F)
-
-        API.moveForward()
-        xprev=x
-        yprev=y
-        x,y = updateCoordinates(x,y,orient)
-
-        L= API.wallLeft()
-        R= API.wallRight()
-        F= API.wallFront()
-        updateWalls(x,y,orient,L,R,F)
-
-        API.turnLeft()
-        orient = orientation(orient,'L')
-
-        API.moveForward()
-        xprev=x
-        yprev=y
-        x,y = updateCoordinates(x,y,orient)
-        
-        L= API.wallLeft()
-        R= API.wallRight()
-        F= API.wallFront()
-        updateWalls(x,y,orient,L,R,F)
-
-        API.turnLeft()
-        orient = orientation(orient,'L')
-
-        API.moveForward()
-        xprev=x
-        yprev=y
-        x,y = updateCoordinates(x,y,orient)
-
-        L= API.wallLeft()
-        R= API.wallRight()
-        F= API.wallFront()
-        updateWalls(x,y,orient,L,R,F)
-
-        API.turnLeft()
-        orient = orientation(orient,'L')
-
-        API.moveForward()
-        xprev=x
-        yprev=y
-        x,y = updateCoordinates(x,y,orient)
-
-        L= API.wallLeft()
-        R= API.wallRight()
-        F= API.wallFront()
-        updateWalls(x,y,orient,L,R,F)
-
-        return (x,y,xprev,yprev,orient)
-
-#done
 def appendZero():
 
     for i in range(16):
@@ -638,18 +402,17 @@ def appendZero():
     queue.append(8)
     queue.append(8)
 
-#done
 def appendDestination(x,y):
 
-    for i in range(16):
-        for j in range(16):
-            flood[i][j]=255
+    
+    # Initialize all cells of the flood matrix to 255
+    flood = [[255] * 16 for _ in range()]
 
-    flood[y][x]=0
-
-    queue.append(y)
+    flood[y][x] = 0
+    
+    # Append the coordinates to the queue
     queue.append(x)
-
+    queue.append(y)
 
 def close_unused_cells(cells):
     for x in range(16):
@@ -661,194 +424,110 @@ def close_unused_cells(cells):
                 API.setWall(x,y,'w')
     return cells
 
-
 def main():
-    x=0
-    y=0
-    xprev=0
-    yprev=0
-    orient=0
-    state=0
-    short= False
-    visitsStart=0
-    keepGoing = True
+    x, y = 0, 0
+    xprev, yprev = 0, 0
+    orient = 0
+    step = 0
+    short = False
+    visits_start = 0
+    keep_going = True
 
-    while keepGoing:
-        #API.setColor(x, y, 'red')
-        L= API.wallLeft()
-        R= API.wallRight()
-        F= API.wallFront()
-        updateWalls(x,y,orient,L,R,F)
-        API.setColor(x,y,'G')
-        log(visitsStart)
-        if(x==0 and y==0):
-            visitsStart= visitsStart + 1
-        
-        tracker[x][y]+= 1
-            
-        
-        if (flood[y][x]!=0):
-            
-            if (state==0):
-                appendZero()
-            elif(state==1):
-                appendDestination(15,0)
-                short=False
-            elif(state==2):
-                appendDestination(0,0)
-                short=False
-            elif(state==3):
-                appendZero()
-                floodFill2(flood2)
-                short=True
-            elif(state==4):
-                appendDestination(0,15)
-                short=False
-            elif(state==5):
-                appendDestination(0,0)
-                short=False
-            elif(state==6):
-                appendZero()
-                floodFill2(flood2)
-                short=True
+    while keep_going:
 
-            floodFill3(flood,queue)
+        # Update walls and cell value
+        L = API.wallLeft()
+        R = API.wallRight()
+        F = API.wallFront()
+        updateWalls(x, y, orient, L, R, F)
+        API.setColor(x, y, 'G')
+        
+
+        if x == 0 and y == 0:
+            visits_start += 1
+
+        tracker[x][y] += 1
+
+        if flood[y][x] != 0:
+
+            if step == 0: #step 0 means go to center
+               
+                appendZero()
+            elif step == 1: #step 1 means go back to start
+                
+                appendDestination(0, 0)
+            floodFill3(flood, queue)
 
         else:
-            if state==5:
-                appendZero()
-                floodFill3(flood,queue)
-                state+=1
-            elif state==4:
-                changeDestination(flood,0,0)
-                state+=1
-            elif state==3:
-                changeDestination(flood,0,15)
-                state+=1
-            elif state==2:
-                appendZero()
-                floodFill3(flood,queue)
-                state+=1
-            elif state==1:
-                changeDestination(flood,0,0)
-                state+=1
-            elif state==0:
-                x,y,xprev,yprev,orient= center(x,y,orient)
-                changeDestination(flood,15,0)
-                state+=1
+
+            if step == 1:
+                changeDestination(flood, 0, 0)
+                step += 1
+            elif step == 0:
+                #x, y, xprev, yprev, orient = center(x, y, orient)
+                changeDestination(flood, 15, 0)
+                step += 1
 
             floodFill2(flood2)
 
-            
-        if short:
-            direction= toMove2(flood2,x,y,xprev,yprev,orient)
-        else:
-            direction= toMove(flood,x,y,xprev,yprev,orient)
-        
-        if (direction=='L'):
-            API.turnLeft()
-            orient = orientation(orient,'L')
+        # Determine direction to move
+        direction = toMove(flood, x, y, xprev, yprev, orient)
 
-        elif (direction=='R'):
+        # Move in the determined direction
+        if direction == 'L':
+            API.turnLeft()
+            orient = orientation(orient, 'L')
+        elif direction == 'R':
             API.turnRight()
-            orient = orientation(orient,'R')
-
-        elif (direction=='B'):
+            orient = orientation(orient, 'R')
+        elif direction == 'B':
             API.turnLeft()
-            orient = orientation(orient,'L')
+            orient = orientation(orient, 'L')
             API.turnLeft()
-            orient = orientation(orient,'L')
+            orient = orientation(orient, 'L')
 
+        show(flood, step)
 
-        show(flood,state)
-        if(visitsStart>1):
-            log("Done!")
-            keepGoing = False
+        if visits_start > 1:
+            Mouse_Tools.log("Speed run!!")
+            keep_going = False
             break
+
         API.moveForward()
-        xprev=x
-        yprev=y
-        x,y = updateCoordinates(x,y,orient)
-        log("bonk!")
-    
-    #close_unused_cells(tracker)
+        xprev, yprev = x, y
+        x, y = updateCoordinates(x, y, orient)
+
+    # Follow the shortest path
     while True:
-        show(flood2,state)
-        L= API.wallLeft()
-        R= API.wallRight()
-        F= API.wallFront()
-        API.setColor(x,y,'g')
+        show(flood2, step)
+        L = API.wallLeft()
+        R = API.wallRight()
+        F = API.wallFront()
+        API.setColor(x, y, 'g')
 
-        if (flood2[y][x]!=1):
-            direction= toMove2(flood2,x,y,xprev,yprev,orient)
+        if flood2[y][x] != 1:
+            direction = toMove(flood2, x, y, xprev, yprev, orient)
 
-        
-            if (direction=='L'):
+            if direction == 'L':
                 API.turnLeft()
-                orient = orientation(orient,'L')
-
-            elif (direction=='R'):
+                orient = orientation(orient, 'L')
+            elif direction == 'R':
                 API.turnRight()
-                orient = orientation(orient,'R')
-
-            elif (direction=='B'):
+                orient = orientation(orient, 'R')
+            elif direction == 'B':
                 API.turnLeft()
-                orient = orientation(orient,'L')
+                orient = orientation(orient, 'L')
                 API.turnLeft()
-                orient = orientation(orient,'L')
+                orient = orientation(orient, 'L')
 
-            show(flood2,state)
+            show(flood2, step)
             API.moveForward()
-            xprev=x
-            yprev=y
-            x,y = updateCoordinates(x,y,orient)
-
+            xprev, yprev = x, y
+            x, y = updateCoordinates(x, y, orient)
         else:
             break
     return
 
-
-'''
-#done
-def shortestPath(x,y,xprev,yprev,orient,state):
-    #floodFill2(flood2)
-
-    while True:
-        show(flood2,state)
-        L= API.wallLeft()
-        R= API.wallRight()
-        F= API.wallFront()
-        #updateWalls(x,y,orient,L,R,F)
-
-        if (flood2[y][x]!=1):
-            direction= toMove2(flood2,x,y,xprev,yprev,orient)
-
-        
-            if (direction=='L'):
-                API.turnLeft()
-                orient = orientation(orient,'L')
-
-            elif (direction=='R'):
-                API.turnRight()
-                orient = orientation(orient,'R')
-
-            elif (direction=='B'):
-                API.turnLeft()
-                orient = orientation(orient,'L')
-                API.turnLeft()
-                orient = orientation(orient,'L')
-
-            show(flood2,state)
-            API.moveForward()
-            xprev=x
-            yprev=y
-            x,y = updateCoordinates(x,y,orient)
-
-        else:
-            break
-    return
-
-'''
 
 if __name__ == "__main__":
     main()
