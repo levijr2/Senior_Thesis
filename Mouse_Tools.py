@@ -1,7 +1,7 @@
 import API
 import sys
 
-def showSuroundingWalls(x,y,orient,L,R,F):
+def showSuroundingWalls(x,y,orient,L,R,F): # highlights walls as they are found
     if(orient==0):
         if(L):
             API.setWall(x,y,'w')
