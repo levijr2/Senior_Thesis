@@ -241,7 +241,7 @@ def changeDestination(maze,destinationx, destinationy):
                 queue.append(x3)
 
 
-def floodFill2(maze):
+def floodFill2(maze): #flood fills to destination
     for i in range(16):
         for j in range(16):
             maze[i][j]=0
@@ -262,7 +262,7 @@ def floodFill2(maze):
     queue.append(8)
 
     
-    while (len(queue)!=0):
+    while (len(queue)!=0): 
         yrun=queue.pop(0)
         xrun=queue.pop(0)
 
@@ -293,7 +293,7 @@ def floodFill2(maze):
                     queue.append(x3)
 
 
-def floodFill3(maze,queue):
+def floodFill3(maze,queue): #flood fills home
 
     while (len(queue)!=0):
         yrun=queue.pop(0)
@@ -406,7 +406,9 @@ def appendDestination(x,y):
 
     
     # Initialize all cells of the flood matrix to 255
-    flood = [[255] * 16 for _ in range()]
+    for i in range(16):
+        for j in range(16):
+            flood[i][j]=255
 
     flood[y][x] = 0
     
@@ -450,10 +452,10 @@ def main():
 
         if flood[y][x] != 0:
 
-            if step == 0: #step 0 means go to center
+            if step == 0: 
                
                 appendZero()
-            elif step == 1: #step 1 means go back to start
+            elif step == 1: 
                 
                 appendDestination(0, 0)
             floodFill3(flood, queue)
