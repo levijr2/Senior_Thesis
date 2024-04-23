@@ -16,3 +16,7 @@
 ### Depth-First Search in DFS_With_DFS_Result.py
 ### Floodfill in floodfill.py
 
+## Here is a picture of the robot created for this project aswell!
+![mouse](https://github.com/levijr2/Senior_Thesis/assets/98910841/185b8ba4-0ffb-48ac-9582-6f484e5558b7)
+
+
