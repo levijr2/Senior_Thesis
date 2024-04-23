@@ -16,8 +16,3 @@
 ### Depth-First Search in DFS_With_DFS_Result.py
 ### Floodfill in floodfill.py
 
-
-
-#### The code for BFS is not created by me. The DFS_Then_BFS.py, location.py, and state.py were are reused from a separate Repo by Mackarone (the creator of the simulation) the only changes made were to the aesthetics of the solution to make it coherent with the other algorithms.
-
-#### The code for Floodfill was reused from  [here](medium.com/@minikiraniamayadharmasiri/micromouse-from-scratch-algorithm-maze-traversal-shortest-path-floodfill-741242e8510). The Logic had to be heavily altered to work properly for my purposes. 
